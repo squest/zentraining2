@@ -8,15 +8,29 @@
 
 (defn number-to-string [number]
   (if (< number 0) 
-    (clojure.string/replace (str number) #"-" "- ") 
-    (str "+ " (str number))))
+    (str number)
+    (str "+" (str number))))
+
+(defn number-to-string-1 [number]
+  (cond 
+    (> number 1) (str "+" (str number))
+    (= number 1) "+"
+    (= number -1) "-"
+    (< number -1) (str number)))
+    
+(defn number-to-string-2 [number]
+  (cond 
+    (> number 0) (str "+" (str number))
+    (< number 0) (str number)
+    :default ""))
 
 (defn get-b [x1 x2] (- (+ x1 x2)))
 
 (defn get-c [x1 x2] (* x1 x2))
 
 (defn get-map []
-  (let 
-    [x1 (generate-one-digit-number)
-     x2 (generate-one-digit-number)]
-    (hash-map :b (number-to-string (get-b x1 x2)) :c (number-to-string (get-c x1 x2)))))
+  (loop [x1 (generate-one-digit-number)
+         x2 (generate-one-digit-number)]
+    (if (= (get-b x1 x2) 0)
+      (recur (generate-one-digit-number) (generate-one-digit-number))
+      (hash-map :b (number-to-string-1 (get-b x1 x2)) :c (number-to-string-2 (get-c x1 x2))))))
